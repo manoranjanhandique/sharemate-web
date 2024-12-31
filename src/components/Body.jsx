@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../store/slices/authSlice';
 import Cookies from 'js-cookie';
 import Spinner from './Spinner';
-import { fetchUserData, refreshToken } from '../utils/authUserFetch';
+import { fetchUserData } from '../utils/authUserFetch';
 
 function Body() {
   const [loading, setLoading] = useState(true);
@@ -23,19 +23,12 @@ function Body() {
       const response = await fetchUserData();
       dispatch(addUser(response));
     } catch (error) {
-      if(error.status===401){
-        try {
-          await refreshToken();
-          const response = await fetchUserData();
-          dispatch(addUser(response));
-        } catch (error) {
-          console.error('Error refreshing token:', error.message);
-          navigate('/signin');
-        }
-      }else{
+      // if(error.status===401){
+      //     navigate('/signin');
+      // }else{
         console.error("Error fetching user data", error.message);
         navigate('/signin')
-      }
+      // }
     }finally {
       setLoading(false); // Set loading to false after API call completes
     }
